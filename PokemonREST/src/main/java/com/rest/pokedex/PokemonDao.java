@@ -31,4 +31,8 @@ public class PokemonDao {
         }
         return list;
     }
+
+    public void save(Pokemon poke){
+        pokeMap.put(poke.getId(), poke);
+    }
 }
