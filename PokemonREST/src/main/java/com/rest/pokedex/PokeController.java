@@ -1,7 +1,6 @@
 package com.rest.pokedex;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,4 +17,29 @@ public class PokeController {
     List<Pokemon> all(){
         return dao.findAll();
     }
+
+    @GetMapping("/pokemon/{id}")
+    Pokemon getByID(@PathVariable int id){
+        return dao.findByID(id);
+    }
+
+    @PostMapping("/pokemon")
+    void newPokemon(@RequestBody Pokemon poke){
+        dao.save(poke);
+    }
+
+    @PutMapping("/pokemon/{id}")
+    void updatePokemon(@RequestBody Pokemon poke, @PathVariable int id){
+        dao.update(poke, id);
+    }
+
+    @DeleteMapping("/pokemon/{id}")
+    void deletePokemon(@PathVariable int id){
+        dao.delete(id);
+    }
+
+     // TODO
+     // pokemon query will be its pokedex ID
+     // TM id in redis will be its name ex TM02
+    // if user tries to look up a tm that a pokemon cant learn send back an error that it cant learn it
 }

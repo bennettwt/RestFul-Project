@@ -2,20 +2,22 @@ package com.rest.pokedex;
 
 import org.springframework.web.bind.annotation.RestController;
 
-public class Pokemon {
-    private int id;
+import java.io.Serializable;
+
+public class Pokemon implements Serializable {
+    private Integer id;
     private String name;
     private String type;
     private String weakness;
 
-    public Pokemon(int id, String name, String type, String weakness){
+    public Pokemon(Integer id, String name, String type, String weakness){
         this.id = id;
         this.name = name;
         this.type = type;
         this.weakness = weakness;
     }
 
-    public int getId() { return id; }
+    public Integer getId() { return id; }
     public void setId(int id) { this.id = id; }
 
     public String getName() { return name; }
