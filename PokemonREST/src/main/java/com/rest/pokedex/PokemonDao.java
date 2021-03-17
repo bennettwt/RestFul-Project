@@ -1,8 +1,10 @@
 package com.rest.pokedex;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.SerializationUtils;
+import org.springframework.web.server.ResponseStatusException;
 import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.Jedis;
 
@@ -54,7 +56,21 @@ public class PokemonDao {
        return (Pokemon) SerializationUtils.deserialize(jedis.get(String.valueOf(id).getBytes()));
     }
 
-    public void save(Pokemon poke){
+    public void save(Pokemon poke) throws ResponseStatusException{
+
+        Set<byte[]> set = new HashSet<>();
+        List<Pokemon> allPokes = new ArrayList<>();
+        set = jedis.keys("*".getBytes());
+        for(byte[] b : set){
+            byte[] array = jedis.get(b);
+            Pokemon p = (Pokemon) SerializationUtils.deserialize(array);
+            allPokes.add(p);
+        }
+        for(Pokemon p : allPokes){
+            if(compareTo(p, poke) == 0) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "That pokemon already exists.");
+            }
+        }
         jedis.set(String.valueOf(poke.getId()).getBytes(), SerializationUtils.serialize(poke));
     }
 
@@ -78,6 +94,22 @@ public class PokemonDao {
     }
 
     public void delete(int id){
-        jedis.del(String.valueOf(id).getBytes());
+        long del = jedis.del(String.valueOf(id).getBytes());
+        if(del == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The Pokemon with that ID doesn't exist");
+        }
     }
+
+    public int compareTo(Pokemon pokemon1, Pokemon pokemon2) {
+        int retVal = -1;
+        if(pokemon1.getId().intValue() == pokemon2.getId().intValue() &&
+                pokemon1.getName().equals(pokemon2.getName()) &&
+                pokemon1.getType().equals(pokemon2.getType()) &&
+                pokemon1.getWeakness().equals(pokemon2.getWeakness())){
+            retVal = 0;
+        }
+        return retVal;
+    }
+
+
 }

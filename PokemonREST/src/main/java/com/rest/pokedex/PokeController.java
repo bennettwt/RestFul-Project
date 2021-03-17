@@ -41,5 +41,7 @@ public class PokeController {
      // TODO
      // pokemon query will be its pokedex ID
      // TM id in redis will be its name ex TM02
-    // if user tries to look up a tm that a pokemon cant learn send back an error that it cant learn it
+     // if user tries to look up a tm that a pokemon cant learn send back an error that it cant learn it
+     // need to do nesting
+
 }

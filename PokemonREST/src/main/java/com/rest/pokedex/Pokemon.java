@@ -28,4 +28,5 @@ public class Pokemon implements Serializable {
 
     public String getWeakness() { return weakness; }
     public void setWeakness(String weakness) { this.weakness = weakness; }
+
 }
